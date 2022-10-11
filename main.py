@@ -3,7 +3,7 @@ from flask import Flask, render_template,request,url_for,redirect
 import psycopg2
 from datetime import datetime
 
-conn = psycopg2.connect(user="postgres", password="12345", host="localhost", port="5432", database="myduka") 
+conn = psycopg2.connect(user="postgres", password="12345678", host="localhost", port="5432", database="myduka") 
 
 cur=conn.cursor()
 
