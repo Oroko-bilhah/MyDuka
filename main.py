@@ -3,11 +3,21 @@ from flask import Flask, render_template,request,url_for,redirect
 import psycopg2
 from datetime import datetime
 
-conn = psycopg2.connect(user="postgres", password="12345678", host="localhost", port="5432", database="myduka") 
+conn = psycopg2.connect(user="egrygupakzeqkd",
+                       password="34dd2aaf584e7c9048faf6b6a470f38c8d7452fbff11739570d25e855272aeae",
+                       host="ec2-54-246-185-161.eu-west-1.compute.amazonaws.com",
+                       port="5432", 
+                       database="myduka") 
 
 cur=conn.cursor()
 
 app= Flask(__name__)
+cur.execute("CREATE TABLE IF NOT EXISTS products(id SERIAL PRIMARY KEY, name VARCHAR(50),buying_price INT NOT NULL, selling_price INT NOT NULL,stock_quantity INT NOT NULL)")
+
+
+cur.execute("CREATE TABLE IF NOT EXISTS sales(id SERIAL PRIMARY KEY ,pid FOREIGN KEY ,quantity INT,created_at DATE NOT NULL DEFAULT NOW())")
+
+
 
 @app.route('/inventories',methods=['POST','GET'])
 def inventories():
@@ -33,9 +43,10 @@ def sales():
   if request.method=="POST":
     pid = request.form['pid']
     quantity = request.form['quantity']
+    created_at=datetime.now()
     print(pid,quantity)
     cur.execute("UPDATE products SET stock_quantity=(stock_quantity-%s) WHERE id=%s;", (quantity, pid))
-    cur.execute("INSERT INTO sales (pid, quantity) VALUES (%s, %s);",(pid,quantity))
+    cur.execute("INSERT INTO sales (pid, quantity,created_at) VALUES (%s, %s,%s);",(pid,quantity,created_at))
     conn.commit()
     
     return redirect('/sales')
@@ -94,7 +105,13 @@ def dashboard():
   print (data)
   labels=[row[0] for row in data]
   values=[row[1] for row in data]
-  return render_template('dashboard.html',labels=labels,values=values)
+
+  cur.execute("SELECT quantity.sales,products.name FROM sales join products on products.id=sales.pid")
+  data = cur.fetchall()
+  print (data)
+  x=[row[0] for row in data]
+  y=[row[1] for row in data]
+  return render_template('dashboard.html',label=labels,values=values,x=x,y=y)
   
      
 
