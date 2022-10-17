@@ -7,7 +7,7 @@ conn = psycopg2.connect(user="egrygupakzeqkd",
                        password="34dd2aaf584e7c9048faf6b6a470f38c8d7452fbff11739570d25e855272aeae",
                        host="ec2-54-246-185-161.eu-west-1.compute.amazonaws.com",
                        port="5432", 
-                       database="myduka") 
+                       database="dc8ck84imtrdou") 
 
 cur=conn.cursor()
 
