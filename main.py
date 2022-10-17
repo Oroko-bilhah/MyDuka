@@ -12,10 +12,10 @@ conn = psycopg2.connect(user="egrygupakzeqkd",
 cur=conn.cursor()
 
 app= Flask(__name__)
-cur.execute("CREATE TABLE IF NOT EXISTS products(id SERIAL PRIMARY KEY, name VARCHAR(50),buying_price INT NOT NULL, selling_price INT NOT NULL,stock_quantity INT NOT NULL)")
+cur.execute("CREATE TABLE IF NOT EXISTS products(id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL,buying_price NUMERIC(14,2), selling_price NUMERIC(14,2),stock_quantity INT DEFAULT 0)")
 
 
-cur.execute("CREATE TABLE IF NOT EXISTS sales(id SERIAL PRIMARY KEY ,pid FOREIGN KEY ,quantity INT,created_at DATE NOT NULL DEFAULT NOW())")
+cur.execute("CREATE TABLE IF NOT EXISTS sales(id SERIAL PRIMARY KEY ,pid int ,quantity numeric(5,2),created_at TIMESTAMP,CONSTRAINT myproduct FOREIGN KEY(pid) on UPDATE cascade on DELETE restrict())")
 
 
 
